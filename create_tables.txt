@@ -1,0 +1,44 @@
+CREATE TABLE "consensus" (
+	"timestamp"	TEXT,
+	"fingerprint"	TEXT,
+	"major"	INTEGER,
+	"minor"	INTEGER,
+	"release"	TEXT,
+	"os"	TEXT,
+	"country"	TEXT,
+	"bandwidth"	INTEGER,
+	"exit_prob"	REAL,
+	"as_name"	TEXT,
+	"version"	TEXT,
+	PRIMARY KEY("timestamp","fingerprint")
+)
+CREATE TABLE "output" (
+	"target"	TEXT,
+	"node"	TEXT,
+	"timestamp"	TEXT,
+	"latency"	INTEGER,
+	"result"	TEXT
+)
+
+CREATE INDEX "getLabels" ON "consensus" (
+	"fingerprint"	DESC,
+	"timestamp"	DESC
+)
+
+CREATE TABLE "detailed_output" (
+	"timestamp"	TEXT,
+	"fingerprint"	TEXT,
+	"major"	INTEGER,
+	"minor"	INTEGER,
+	"release"	TEXT,
+	"os"	TEXT,
+	"country"	TEXT,
+	"bandwidth"	INTEGER,
+	"exit_prob"	REAL,
+	"as_name"	TEXT,
+	"version"	TEXT,
+	"target"	TEXT,
+	"latency"	INTEGER,
+	"result"	TEXT,
+	PRIMARY KEY("timestamp","fingerprint")
+)
