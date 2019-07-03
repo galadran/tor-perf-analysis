@@ -34,7 +34,7 @@ class Consensus:
         
     def as_tuple(self):
         return (self.timestamp,self.fingerprint,self.major,self.minor,self.release,self.os,\
-            self.bandwidth,self.exit_prob,self.country,self.as_name,self.version)
+            self.country,self.bandwidth,self.exit_prob,self.as_name,self.version)
 
 def process(sql,timestamp,contents):
     if "_relays" not in contents.keys():
