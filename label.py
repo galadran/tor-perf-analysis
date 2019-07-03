@@ -82,7 +82,7 @@ def watcher(qIn,qOut):
     t.close()
 
 if __name__ == "__main__":
-    printing("Warning - Currently this has to be forcibly terminated once finished") #TODO fix
+    print("Warning - Currently this has to be forcibly terminated once finished") #TODO fix
     db = sqlite3.connect("output.sqlite", isolation_level=None)
     db.execute("PRAGMA synchronous = OFF")
     db.execute("PRAGMA journal_mode = WAL")
