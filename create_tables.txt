@@ -12,13 +12,15 @@ CREATE TABLE "consensus" (
 	"version"	TEXT,
 	PRIMARY KEY("timestamp","fingerprint")
 )
-CREATE TABLE "output" (
-	"target"	TEXT,
-	"node"	TEXT,
-	"timestamp"	TEXT,
-	"latency"	INTEGER,
-	"result"	TEXT
-)
+	CREATE TABLE "output" (
+		"target"	TEXT,
+		"node"	TEXT,
+		"timestamp"	TEXT,
+		"latency"	INTEGER,
+		"result"	TEXT
+	)
+
+CREATE INDEX `getLatency` ON `output` ( `exit`, `timestamp` )
 
 CREATE INDEX "getLabels" ON "consensus" (
 	"fingerprint"	DESC,
