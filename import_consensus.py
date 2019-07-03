@@ -50,7 +50,7 @@ def process(sql,timestamp,contents):
 db = sqlite3.connect("output.sqlite")
 sql = db.cursor() 
 
-for p in tqdm(glob("exits-json-raw_historical/**/*.json",recursive=True)):
+for p in tqdm(glob("exits-json-raw/**/*.json",recursive=True)):
     if "results_latest" in p:
         continue
     f = open(p,'r')
