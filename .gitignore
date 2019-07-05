@@ -1,1 +1,8 @@
 *.json
+*.tpf
+output.csv
+db.7z
+output.sqlite.sql
+output.sqlite-wal
+output.sqlite-shm
+output.sqlite
