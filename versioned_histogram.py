@@ -33,7 +33,7 @@ for (fp,mj,os) in tqdm(results.keys(),desc='Calculating percentiles'):
         continue
     if (mj,os) not in percentile99.keys():
         percentile99[(mj,os)] = list()
-    percentile99[(mj,os)].append(percentile(results[(fp,mj,os)],99.9))
+    percentile99[(mj,os)].append(percentile(results[(fp,mj,os)],99))
 
 majorVersionPercentiles = dict()
 for (mj,os) in percentile99.keys():
@@ -50,7 +50,7 @@ print("Loaded percentile data for " + \
     " relays across " + str(len(majorVersionPercentiles.keys())) + " major versions")
 #%%
 #Example plotly call 
-from plotly.offline import init_notebook_mode, iplot
+from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
 
 init_notebook_mode(connected=True)         # initiate notebook for offline plot

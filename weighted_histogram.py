@@ -16,7 +16,7 @@ sql = db.cursor()
 #Swap out mk,os for quintile position. 
 
 sql.execute("""
-            SELECT fingerprint,country FROM consensus
+            SELECT fingerprint,bandwidth FROM consensus
             """)
 
 results = dict()
@@ -95,7 +95,7 @@ for k in percentile99.keys():
 
 #%%
 #Example plotly call 
-from plotly.offline import init_notebook_mode, iplot
+from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
 
 init_notebook_mode(connected=True)         # initiate notebook for offline plot
