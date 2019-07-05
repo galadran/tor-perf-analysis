@@ -40,12 +40,15 @@ sql = db.cursor()
 
 #fingerprint = '77B829E5628712BD3D639242B9A0B40DDCB6B871'
 
+lower = "0.0"
+higher = "10.0"
+
 sql.execute("""
                 SELECT timestamp,latency
                 FROM output
                 WHERE state == 'SUCCEEDED'
-                AND latency > 0.0
-                AND latency < 10.0
+                AND latency > """+ lower + """
+                AND latency < """ + higher + """
                 """)
 
 xD = list()
@@ -60,24 +63,43 @@ for (t,l) in tqdm(sql.fetchall()):
 #%%
 import matplotlib
 #matplotlib.use('Cairo')
-
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = 'Ubuntu'
+plt.rcParams['font.monospace'] = 'Ubuntu Mono'
+plt.rcParams['font.size'] = 24
+plt.rcParams['axes.labelsize'] = 24
+plt.rcParams['axes.labelweight'] = 'bold'
+plt.rcParams['axes.titlesize'] = 24
+plt.rcParams['xtick.major.size'] = 15
+plt.rcParams['xtick.minor.size'] = 7.5
+plt.rcParams['xtick.labelsize'] = 24
+plt.rcParams['xtick.labelsize'] = 24
+plt.rcParams['ytick.labelsize'] = 24
+plt.rcParams['legend.fontsize'] = 24
+plt.rcParams['figure.titlesize'] = 24
 #plt.figure(figsize=(24,24))
+
+
 years = mdates.YearLocator()   # every year
 months = mdates.MonthLocator()  # every month
 years_fmt = mdates.DateFormatter('%Y')
-
+month_fmt = mdates.DateFormatter('%B')
 fig, ax = plt.subplots(1,1,figsize=(24,24),sharex=True)
+ax.set_title('All successful measurements between ' + lower +  ' and ' +higher+ ' seconds')
+ax.set_xlabel("Date (Years, Months)")
+ax.set_ylabel("Latency, excluding circuit construction (seconds)")
 ax.xaxis.set_major_locator(years)
-ax.xaxis.set_major_formatter(years_fmt)
+ax.xaxis.set_major_formatter(years_fmt,)
+#ax.xaxis.set_minor_formatter(month_fmt)
 ax.xaxis.set_minor_locator(months)
 
 ax.set_xlim([min(xD),max(xD)])
-ax.set_ylim([0,10])
+ax.set_ylim([float(lower),float(higher)])
 
 x = np.array(xD)
 y = np.array(yD)
 
-density_scatter(x,y,bins=2048,ax=ax,cmap=plt.get_cmap('hot',2048))
+density_scatter(x,y,bins=1024,ax=ax,s=200,cmap=plt.get_cmap('magma',1024))
 #plt.colorbar()
 #plt.tight_layout()
 plt.savefig('foo.png')
