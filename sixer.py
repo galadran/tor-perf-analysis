@@ -17,7 +17,7 @@ sql = db.cursor()
 
 sql.execute("""
             SELECT fingerprint,Count(*) FROM detailed_output
-            WHERE latency > 5 GROUP BY fingerprint 
+            WHERE latency > 5 AND result == 'SUCCEEDED' GROUP BY fingerprint 
             """)
             #WHERE result == 'SUCCEEDED' AND latency > 5 GROUP BY fingerprint 
 results = dict()
@@ -26,7 +26,7 @@ for (fp,ct) in tqdm(sql.fetchall(),desc='Loading raw results'):
 
 #%%
 #Example plotly call 
-from plotly.offline import init_notebook_mode, iplot
+from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
 
 init_notebook_mode(connected=True)         # initiate notebook for offline plot
@@ -39,11 +39,13 @@ iplot([h], filename='histogram')
 
 #%%
 candidates = [(k,v) for (k,v) in results.items() if v > 300]
+candidates = sorted(candidates,key=lambda x : int(x[1]),reverse=True)
 candidates = candidates[0:20]
-sorted(candidates,key=lambda x : x[1],reverse=True)
 
 scatters = list()
 for (k,v) in tqdm(candidates):
+    print(k)
+    print(v)
     #fetch full results 
     sql.execute("""
                 SELECT timestamp,latency FROM detailed_output WHERE fingerprint == '""" + str(k) + """' AND result == 'SUCCEEDED'
@@ -59,7 +61,7 @@ for (k,v) in tqdm(candidates):
     scatters.append(s)
     
     sql.execute("""
-                SELECT timestamp,country,bandwidth FROM consensus WHERE fingerprint == '""" + str(k) + """'
+                SELECT timestamp,bandwidth,exit_prob FROM consensus WHERE fingerprint == '""" + str(k) + """'
                 """)
     tsc = list()
     bdwth = list()
@@ -72,7 +74,8 @@ for (k,v) in tqdm(candidates):
     b = go.Scatter(x=tsc,y=bdwth,mode='lines',name='Bandwidth',yaxis='y2')
     l = go.Layout(    title='Relay ID: '+str(k),
     yaxis=dict(
-        title='Latency (s)'
+        title='Latency (s)',
+        range=[0,10]
     ),
     yaxis2=dict(
         title='Exit Probability',
@@ -88,7 +91,7 @@ for (k,v) in tqdm(candidates):
     e = go.Scatter(x=tsc,y=exitProb,mode='lines',name='Exit Probability',yaxis='y2')
     #build scatter
     fig = go.Figure(data=[s,e],layout=l)
-    iplot(fig,filename='scatters')
+    plot(fig,filename='scatters')
 
 #%%
 #from plotly import tools
