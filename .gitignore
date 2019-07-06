@@ -1,3 +1,5 @@
+__pycache__/*
+torperf/*
 *.json
 *.tpf
 output.csv
@@ -6,3 +8,5 @@ output.sqlite.sql
 output.sqlite-wal
 output.sqlite-shm
 output.sqlite
+*.html
+*.png
