@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import time 
 
-def fetchDNSData(startTimepoint,finishTimepoint,latencyLB,latencyUB,db='output.sqlite'):
+def fetchDNSData(startTimepoint,finishTimepoint,latencyLB,latencyUB,db='../data/output.sqlite'):
     where = """
                 WHERE state == 'SUCCEEDED'
                 AND latency > """+ latencyLB + """
@@ -15,7 +15,7 @@ def fetchDNSData(startTimepoint,finishTimepoint,latencyLB,latencyUB,db='output.s
     return fetchSQLDNSData(where,startTimepoint,finishTimepoint,db)
 
 def fetchSQLDNSData(where,before,after,db):
-    db = sqlite3.connect("output.sqlite")
+    db = sqlite3.connect(db)
     sql = db.cursor() 
     sql.execute("""
                 SELECT timestamp,latency
@@ -34,7 +34,7 @@ def fetchSQLDNSData(where,before,after,db):
         yD.append(float(l))
     return (xD,yD)
 
-def fetchTorPerf(startTimepoint,finishTimepoint,latencyLB,latencyUB,sources,db='output.sqlite'):
+def fetchTorPerf(startTimepoint,finishTimepoint,latencyLB,latencyUB,sources,db='../data/output.sqlite'):
     where = """
                 WHERE didtimeout == '0'
                 AND dataresponse-datarequest > """ + latencyLB + """

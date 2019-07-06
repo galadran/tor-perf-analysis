@@ -1,11 +1,11 @@
 from draw_scatter_dataset import draw_graph
 from fetch_latencies import fetchTorPerf, fetchDNSData
 
-def torPerfAnalysis(s,f,l,u,sources,img,prefix='images/',m=False):
+def torPerfAnalysis(s,f,l,u,sources,img,prefix='../images/',m=False):
     xD, yD = fetchTorPerf(s,f,l,u,sources)
     draw_graph('TorPerf dataset',l,u,xD,yD,prefix+img,months=m)
 
-def DNSAnalysis(s,f,l,u,img,prefix='images/',m=False):
+def DNSAnalysis(s,f,l,u,img,prefix='../images/',m=False):
     (xD,yD) = fetchDNSData(s,f,l,u)
     draw_graph('DNS Dataset',l,u,xD,yD,prefix+img,months=m)
 
