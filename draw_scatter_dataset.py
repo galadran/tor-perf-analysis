@@ -26,7 +26,7 @@ def draw_graph(title,lower,higher,xD,yD,filename):
     plt.rcParams['figure.titlesize'] = 24
 
     ### Setup graph
-    fig, ax = plt.subplots(len(xD.keys()),1,figsize=(24,24),sharex=True)
+    fig, ax = plt.subplots(len(xD.keys()),1,figsize=(36,24),sharex=True)
     if len(xD.keys()) == 1: 
         ax = [ax]
 

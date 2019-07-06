@@ -49,6 +49,8 @@ def fetchTorPerf(startTimepoint,finishTimepoint,latencyLB,latencyUB,sources,db='
         else:
             sQuery += """ OR source = '""" + s + "' "
     sQuery += ')'
+    if sQuery == ' AND ()':
+        sQuery = ""
     where = where + sQuery
     return fetchSQLTorPerf(where,startTimepoint,finishTimepoint,db)
 
