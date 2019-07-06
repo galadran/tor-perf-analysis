@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import time 
 
-def fetchDNSData(before,after,above,below,db='output.sqlite'):
+def fetchDNSData(startTimepoint,finishTimepoint,latencyLB,latencyUB,db='output.sqlite'):
     where = """
                 WHERE state == 'SUCCEEDED'
-                AND latency > """+ above + """
-                AND latency < """ + below + """
+                AND latency > """+ latencyLB + """
+                AND latency < """ + latencyUB + """
                 """
-    return fetchSQLDNSData(where,before,after,db)
+    return fetchSQLDNSData(where,startTimepoint,finishTimepoint,db)
 
 def fetchSQLDNSData(where,before,after,db):
     db = sqlite3.connect("output.sqlite")
@@ -29,16 +29,19 @@ def fetchSQLDNSData(where,before,after,db):
             t = t + ".000"
         dt = datetime.datetime.strptime(t, "%Y-%m-%d %H:%M:%S.%f")
         if str(dt )< before or str(dt) > after:
+            print(dt)
+            print(before)
+            print(after)
             continue
         xD.append(mdates.date2num(dt)) 
         yD.append(float(l))
     return (xD,yD)
 
-def fetchTorPerf(before,after,above,below,sources,db='output.sqlite'):
+def fetchTorPerf(startTimepoint,finishTimepoint,latencyLB,latencyUB,sources,db='output.sqlite'):
     where = """
                 WHERE didtimeout == '0'
-                AND dataresponse-datarequest > """ + above + """
-                AND dataresponse-datarequest < """ + below + " "
+                AND dataresponse-datarequest > """ + latencyLB + """
+                AND dataresponse-datarequest < """ + latencyUB + " "
     sQuery = ' AND ('
     for s in sources:
         if sQuery == ' AND (':
@@ -47,8 +50,7 @@ def fetchTorPerf(before,after,above,below,sources,db='output.sqlite'):
             sQuery += """ OR source = '""" + s + "' "
     sQuery += ')'
     where = where + sQuery
-    print(where)
-    return fetchSQLTorPerf(where,before,after,db)
+    return fetchSQLTorPerf(where,startTimepoint,finishTimepoint,db)
 
 def fetchSQLTorPerf(where,before,after,db):
     db = sqlite3.connect(db)
