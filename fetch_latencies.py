@@ -29,9 +29,6 @@ def fetchSQLDNSData(where,before,after,db):
             t = t + ".000"
         dt = datetime.datetime.strptime(t, "%Y-%m-%d %H:%M:%S.%f")
         if str(dt )< before or str(dt) > after:
-            print(dt)
-            print(before)
-            print(after)
             continue
         xD.append(mdates.date2num(dt)) 
         yD.append(float(l))

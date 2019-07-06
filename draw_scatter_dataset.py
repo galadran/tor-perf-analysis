@@ -25,6 +25,8 @@ def draw_graph(title,lower,higher,xD,yD,filename):
     plt.rcParams['legend.fontsize'] = 24
     plt.rcParams['figure.titlesize'] = 24
 
+    xD = {k:v for (k,v) in xD if len(v) > 100}
+    yD = {k:v for (k,v) in yD if len(v) > 100}
     ### Setup graph
     fig, ax = plt.subplots(len(xD.keys()),1,figsize=(36,24),sharex=True)
     if len(xD.keys()) == 1: 
@@ -53,7 +55,6 @@ def draw_graph(title,lower,higher,xD,yD,filename):
 
     i = 0
     for source in tqdm(yD.keys(),desc='Drawing Heatmaps'):
-
         ax[i].set_ylim([float(lower),float(higher)])
         x = np.array(xD[source])
         y = np.array(yD[source])
