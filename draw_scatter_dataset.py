@@ -4,7 +4,7 @@ import matplotlib.dates as mdates
 from density_plot import density_scatter
 from tqdm import tqdm
 
-def draw_graph(title,lower,higher,xD,yD,filename):
+def draw_graph(title,lower,higher,xD,yD,filename,months=False):
     if type(xD) is list: 
         xD = {'data' : xD }
         yD = {'data' : yD }
@@ -25,8 +25,8 @@ def draw_graph(title,lower,higher,xD,yD,filename):
     plt.rcParams['legend.fontsize'] = 24
     plt.rcParams['figure.titlesize'] = 24
 
-    xD = {k:v for (k,v) in xD if len(v) > 100}
-    yD = {k:v for (k,v) in yD if len(v) > 100}
+    xD = {k:v for (k,v) in xD.items() if len(v) > 100}
+    yD = {k:v for (k,v) in yD.items() if len(v) > 100}
     ### Setup graph
     fig, ax = plt.subplots(len(xD.keys()),1,figsize=(36,24),sharex=True)
     if len(xD.keys()) == 1: 
@@ -49,7 +49,8 @@ def draw_graph(title,lower,higher,xD,yD,filename):
     ax[0].xaxis.set_major_formatter(years_fmt)
     ax[0].xaxis.set_minor_locator(months)
     #ax[0].grid(b=True, which='major',axis='x', color='green', linestyle='-')
-    ax[0].xaxis.set_minor_formatter(month_fmt)
+    if months:
+        ax[0].xaxis.set_minor_formatter(month_fmt)
     #ax[0].set_xlim([min(xD.items(),key=lambda x:x[1]),
                     #max(xD.items(),key=lambda x:x[1])])
 
