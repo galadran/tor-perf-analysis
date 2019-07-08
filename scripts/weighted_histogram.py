@@ -8,7 +8,7 @@
 from tqdm import tqdm
 
 import sqlite3
-db = sqlite3.connect("output.sqlite")
+db = sqlite3.connect("../data/output.sqlite")
 sql = db.cursor() 
 
 #Get weights of each relay
@@ -16,14 +16,14 @@ sql = db.cursor()
 #Swap out mk,os for quintile position. 
 
 sql.execute("""
-            SELECT fingerprint,bandwidth FROM consensus
+            SELECT fingerprint,exit_prob FROM consensus
             """)
 
 results = dict()
 for (fp,cn) in tqdm(sql.fetchall(),desc='Loading consensus data'):
     if fp not in results.keys():
         results[fp] = list()
-    results[fp].append(int(cn))
+    results[fp].append(float(cn))
 
 
 from numpy import percentile 
@@ -37,17 +37,17 @@ for k in results.keys():
     medians[k] = m
 
 #%%
-from plotly.offline import init_notebook_mode, iplot
+from plotly.offline import init_notebook_mode, plot
 import plotly.graph_objs as go
 
-init_notebook_mode(connected=True)         # initiate notebook for offline plot
+#init_notebook_mode(connected=True)         # initiate notebook for offline plot
 
 h = go.Histogram(x=list(medians.values()))
 
 layout = go.Layout()
 fig = go.Figure(data=[h], layout=layout)
 
-iplot(fig, filename='histogram')
+plot(fig, filename='histogram')
 
 #%%
 
@@ -98,7 +98,7 @@ for k in percentile99.keys():
 from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
 
-init_notebook_mode(connected=True)         # initiate notebook for offline plot
+#init_notebook_mode(connected=True)         # initiate notebook for offline plot
 
 h = list()
 for (k,v) in series.items():
@@ -107,6 +107,6 @@ for (k,v) in series.items():
 layout = go.Layout(barmode='stack')
 fig = go.Figure(data=h, layout=layout)
 
-iplot(fig, filename='stacked histogram')
+plot(fig, filename='stacked histogram')
 
 #%%
