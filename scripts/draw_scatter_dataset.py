@@ -27,6 +27,9 @@ def draw_graph(title,lower,higher,xD,yD,filename,months=False):
 
     xD = {k:v for (k,v) in xD.items() if len(v) > 100}
     yD = {k:v for (k,v) in yD.items() if len(v) > 100}
+
+    if len(xD.keys()) < 1:
+        return
     ### Setup graph
     fig, ax = plt.subplots(len(xD.keys()),1,figsize=(36,24),sharex=True)
     if len(xD.keys()) == 1: 

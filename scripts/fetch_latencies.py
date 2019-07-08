@@ -6,6 +6,34 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import time 
 
+def fetchDNSVersionData(versions,db='../data/output.sqlite'):
+    db = sqlite3.connect(db)
+    sql = db.cursor() 
+    where = "WHERE (result = 'SUCCEEDED') AND ("
+    for (major,os) in versions:
+        if where != "WHERE (result = 'SUCCEEDED') AND (":
+            where += ' OR '
+        where = where + " ( major = '" + major 
+        where = where + "' AND os = '" + os + "')"
+    where += ')'
+    print(where)    
+    sql.execute("""
+                SELECT timestamp,latency
+                FROM detailed_output """
+                + where 
+                )
+    xD = list()
+    yD = list()
+    for (t,l) in tqdm(sql.fetchall(),desc='Fetching DNS Data'):
+        if "." not in t:
+            t = t + ".000"
+        dt = datetime.datetime.strptime(t, "%Y-%m-%d %H:%M:%S.%f")
+        #if str(dt )< before or str(dt) > after:
+        #   continue
+        xD.append(mdates.date2num(dt)) 
+        yD.append(float(l))
+    return (xD,yD)  
+
 def fetchDNSData(startTimepoint,finishTimepoint,latencyLB,latencyUB,db='../data/output.sqlite'):
     where = """
                 WHERE state == 'SUCCEEDED'
