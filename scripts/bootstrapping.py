@@ -42,7 +42,7 @@ dates = sorted(dayArrays.keys())
 
 for k in tqdm(dates,desc='Bootstrapping each day'):
     vals = np.array(dayArrays[k])
-    r = bs.bootstrap(vals, stat_func=bs_stats.std,num_threads=12)
+    r = bs.bootstrap(vals, stat_func=bs_stats.median,num_threads=12)
     xvalues.append(k)
     yvalues.append(r.value)
     lowers.append(r.lower_bound)

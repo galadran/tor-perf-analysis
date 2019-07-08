@@ -29,9 +29,9 @@ def getVersions(db='../data/output.sqlite'):
     return (windows,bsd)
 
 print("Warning: After graphing finishes, there may be a long (silent) pause for rendering to png")
-
+torPerfAnalysis("2010","2014-01-01",'0.0','10.0',[],'torperf_early.png',m=True)
 DNSVersion([('2','Linux'),('3','Linux'),('4','Linux')],'dns_all_linux.png')
-exit(0)
+
 windows,bsd = getVersions()
 DNSVersion(windows,'dns_Windows.png')
 DNSVersion(bsd,'dns_BSD.png')
@@ -44,7 +44,7 @@ torPerfAnalysis("2017-05-01","2020",'0.0','10.0',[],'torperf_latest.png',m=True)
 torPerfAnalysis("2010","2020",'0.0','10.0',[],'torperf_all.png')
 torPerfAnalysis("2010","2020",'0.0','10.0',['torperf','moria','siv'],'torperf_big_three.png')
 torPerfAnalysis("2014-06-01","2015-06-01",'0.0','10.0',[],'torperf_2015.png',m=True)
-torPerfAnalysis("2010","2015-01-01",'0.0','10.0',[],'torperf_early.png',m=True)
+
 torPerfAnalysis("2015","2020",'0.0','10.0',[],'torperf_late.png',m=True)
 torPerfAnalysis("2010","2020",'0.0','2.0',[],'torperf_fast.png')
 

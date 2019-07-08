@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 
 import sqlite3
-db = sqlite3.connect("output.sqlite")
+db = sqlite3.connect("../data/output.sqlite")
 sql = db.cursor() 
 
 sql.execute("""
@@ -28,18 +28,23 @@ for (fp,ct) in tqdm(sql.fetchall(),desc='Loading raw results'):
 #Example plotly call 
 from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
+import plotly.io as pio
 
-init_notebook_mode(connected=True)         # initiate notebook for offline plot
+#init_notebook_mode(connected=True)         # initiate notebook for offline plot
 
-h = go.Histogram(x=list(results.values()))
 
-iplot([h], filename='histogram')
-
+h = go.Histogram(x=list(results.values()),xbins=dict(
+        start=0.0,
+        end=300.0))
+layout = go.Layout()
+fig = go.Figure(data=[h], layout=layout)
+#iplot([h], filename='histogram')
+pio.write_image(fig, '../images/dns_slow_requests_relays_histogram.png',scale=4)
 
 
 #%%
 candidates = [(k,v) for (k,v) in results.items() if v > 300]
-candidates = sorted(candidates,key=lambda x : int(x[1]),reverse=True)
+#candidates = sorted(candidates,key=lambda x : int(x[1]),reverse=True)
 candidates = candidates[0:20]
 
 scatters = list()
@@ -91,7 +96,8 @@ for (k,v) in tqdm(candidates):
     e = go.Scatter(x=tsc,y=exitProb,mode='lines',name='Exit Probability',yaxis='y2')
     #build scatter
     fig = go.Figure(data=[s,e],layout=l)
-    plot(fig,filename='scatters')
+    pio.write_image(fig, '../images/TemporalAnalysis/random/'+str(k)+'.png',scale=4)
+
 
 #%%
 #from plotly import tools

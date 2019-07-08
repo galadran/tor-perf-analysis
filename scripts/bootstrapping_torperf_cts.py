@@ -32,6 +32,7 @@ for (s,f) in tqdm(sql.fetchall(),desc='Processing entries'):
     t = time.ctime(int(s.split('.')[0]))
     dt = datetime.datetime.strptime(t, "%a %b %d %H:%M:%S %Y")
     day = dt.date()
+    #day = datetime.datetime(dt.year,dt.month,1)
     if day not in dayArrays.keys():
         dayArrays[day] = list()
     dayArrays[day].append(float(f)-float(s))
@@ -49,7 +50,7 @@ def percentile(val):
 for k in tqdm(dates,desc='Bootstrapping each day'):
     vals = np.array(dayArrays[k])
     #r = bs.bootstrap(vals, stat_func=percentile,num_threads=12)
-    r = bs.bootstrap(vals, stat_func=bs_stats.std,num_threads=12)
+    r = bs.bootstrap(vals, stat_func=bs_stats.median,num_threads=12)
     xvalues.append(k)
     yvalues.append(r.value)
     lowers.append(r.lower_bound)
@@ -58,7 +59,7 @@ for k in tqdm(dates,desc='Bootstrapping each day'):
 import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-
+import plotly.io as pio
 
 upper_bound = go.Scatter(
     name='Upper Bound',
@@ -67,7 +68,7 @@ upper_bound = go.Scatter(
     mode='lines',
     marker=dict(color="#444"),
     line=dict(width=0),
-    fillcolor='rgba(68, 68, 68, 0.3)',
+    fillcolor='rgba(255, 0, 0, 0.3)',
     fill='tonexty')
 
 trace = go.Scatter(
@@ -76,7 +77,7 @@ trace = go.Scatter(
     y=yvalues,
     mode='lines',
     line=dict(color='rgb(31, 119, 180)'),
-    fillcolor='rgba(68, 68, 68, 0.3)',
+    fillcolor='rgba(255, 0, 0, 0.3)',
     fill='tonexty')
 
 lower_bound = go.Scatter(
@@ -91,8 +92,8 @@ data = [lower_bound, trace, upper_bound]
 
 layout = go.Layout(
     yaxis=dict(title='Latency(s)'),
-    title='TorPerf Estimate of Median over time',
+    title='TorPerf - Median Daily Latency',
     showlegend = False)
 
 fig = go.Figure(    data=data, layout=layout)
-plot(fig, filename='pandas-continuous-error-bars.html')#,image='jpeg')#,imageheight=2160,image_width=4096)
+pio.write_image(fig, '../images/torperf_median_daily_ci.png',scale=4)

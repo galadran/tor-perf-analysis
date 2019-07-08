@@ -54,7 +54,7 @@ for (ep,lt) in tqdm(results.items(),desc='Processing Quartiles'):
 from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
-
+import plotly.io as pio
 #init_notebook_mode(connected=True)         # initiate notebook for offline plot
 
 data = list()
@@ -67,5 +67,4 @@ fig = ff.create_distplot(data, labels,show_hist=False,show_rug=False)
 
 
 #layout = go.Layout(barmode='overlay')
-
-plot(fig, filename='stacked histogram')
+pio.write_image(fig, '../images/dns_weighted_histogram.png',scale=4)#,width=4096, height=3012, scale=4)

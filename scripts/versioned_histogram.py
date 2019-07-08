@@ -11,7 +11,7 @@
 from tqdm import tqdm
 
 import sqlite3
-db = sqlite3.connect("output.sqlite")
+db = sqlite3.connect("../data/output.sqlite")
 sql = db.cursor() 
 
 sql.execute("""
@@ -52,16 +52,20 @@ print("Loaded percentile data for " + \
 #Example plotly call 
 from plotly.offline import init_notebook_mode, iplot, plot
 import plotly.graph_objs as go
+import plotly.io as pio
 
-init_notebook_mode(connected=True)         # initiate notebook for offline plot
+#init_notebook_mode(connected=True)         # initiate notebook for offline plot
 
 h = list()
 for (k,v) in majorVersionPercentiles.items():
-    h.append(go.Histogram(x=v,name=str(k)))
+    h.append(go.Histogram(x=v,name=str(k),xbins=dict(
+        start=0.0,
+        end=10.0)))
 
 layout = go.Layout(barmode='stack')
 fig = go.Figure(data=h, layout=layout)
 
-iplot(fig, filename='stacked histogram')
+pio.write_image(fig, '../images/dns_versioned_histogram.png',scale=4)#,width=4096, height=3012, scale=4)
+#iplot(fig, filename='stacked histogram')
 
 #%%
