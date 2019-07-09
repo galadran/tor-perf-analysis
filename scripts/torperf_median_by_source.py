@@ -61,19 +61,15 @@ def drawMedianGraph(source):
         lowers.append(r.lower_bound)
         uppers.append(r.upper_bound)
 
-
-
-
-
-    # upper_bound = go.Scatter(
-    #     name='Upper Bound',
-    #     x=xvalues,
-    #     y=uppers,
-    #     mode='lines',
-    #     marker=dict(color="#444"),
-    #     line=dict(width=0),
-    #     fillcolor='rgba(255, 0, 0, 0.3)',
-    #     fill='tonexty')
+    upper_bound = go.Scatter(
+        name='Upper Bound',
+        x=xvalues,
+        y=uppers,
+        mode='lines',
+        marker=dict(color="#444"),
+        line=dict(width=0),
+        fillcolor='rgba(255, 0, 0, 0.3)',
+        fill='tonexty')
 
     trace = go.Scatter(
         name=source,
@@ -84,24 +80,26 @@ def drawMedianGraph(source):
         #fillcolor='rgba(255, 0, 0, 0.3)',
         #fill='tonexty')
 
-    # lower_bound = go.Scatter(
-    #     name='Lower Bound',
-    #     x=xvalues,
-    #     y=lowers,
-    #     marker=dict(color="#444"),
-    #     line=dict(width=0),
-    #     mode='lines')
+    lower_bound = go.Scatter(
+        name='Lower Bound',
+        x=xvalues,
+        y=lowers,
+        marker=dict(color="#444"),
+        line=dict(width=0),
+        mode='lines')
 
-    return [trace]
+    return [trace,lower_bound,upper_bound]
 
 
 layout = go.Layout(
         yaxis=dict(title='Latency(s)'),
-        title='TorPerf - Median Daily Latency',
+        title='TorPerf - Median Monthly Latency',
         showlegend = True)
 data = list()
 sql.execute("SELECT DISTINCT source FROM torperf")
 for (s,) in sql.fetchall():
+    if 'op' not in s:
+        continue
     data.extend(drawMedianGraph(s))
 fig = go.Figure(data=data, layout=layout)
-pio.write_image(fig, '../images/torperf_median_daily_source_ci.png',scale=4)
+pio.write_image(fig, '../images/torperf_median_monthly_source_ci.png',scale=4)
